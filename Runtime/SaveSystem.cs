@@ -50,11 +50,26 @@ namespace OctanGames.SaveModule
 		}
 		public static bool ResetAllSaves()
 		{
-			var directory = new DirectoryInfo(serializationFileSystem.DirectoryName);
-			directory.Delete();
-			Directory.CreateDirectory(serializationFileSystem.DirectoryName);
+			if (Directory.Exists(serializationFileSystem.DirectoryName))
+			{
+				string[] files = Directory.GetFiles(serializationFileSystem.DirectoryName);
+				foreach (string file in files)
+				{
+					File.Delete(file);
+				}
 
-			return true;
+				Directory.Delete(serializationFileSystem.DirectoryName);
+				Directory.CreateDirectory(serializationFileSystem.DirectoryName);
+
+				return true;
+			}
+			else
+			{
+				Debug.LogWarning("Directory does not exist: " + serializationFileSystem.DirectoryName);
+				Directory.CreateDirectory(serializationFileSystem.DirectoryName);
+
+				return false;
+			}
 		}
 		public static void SetSerializationSystem(ISerializationFileSystem serializationFileSystem)
 		{
