@@ -14,8 +14,13 @@ namespace OctanGames.SaveModule
 		{
 			return serializationFileSystem.SerializeObject(saveData, saveName);
 		}
-		public static T Load<T>(string path)
+		public static T Load<T>(string path, T defaultValue)
 		{
+			if (!HasKey(path))
+			{
+				return defaultValue;
+			}
+			
 			try
 			{
 				return serializationFileSystem.DeserializeObject<T>(path);
